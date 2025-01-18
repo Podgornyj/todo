@@ -76,7 +76,7 @@ app.post('/todos', async (req, res) => {
 app.put('/todos/:id', async (req, res) => {
     try {
         const { id } = req.params;
-        const { title, completed } = req.body;
+        const { title, completed = false } = req.body;
 
         const todos = await readTodos();
         const todoIndex = todos.findIndex((todo) => todo.id === Number(id));
@@ -88,9 +88,8 @@ app.put('/todos/:id', async (req, res) => {
         if (title) {
             todos[todoIndex].title = title;
         }
-        if (completed) {
-            todos[todoIndex].completed = completed;
-        }
+
+        todos[todoIndex].completed = completed;
 
         await writeTodos(todos);
 

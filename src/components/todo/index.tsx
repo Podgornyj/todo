@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { TodoType } from '../../types/todo';
-import { useDeleteTodo } from '../../queries/todo';
+import { useDeleteTodo, useCompletedTodo } from '../../queries/todo';
+import { uiStore } from '../../stores/uistore';
 
 interface TodoProps {
     todo: TodoType;
@@ -8,16 +9,38 @@ interface TodoProps {
 
 const Todo: React.FC<TodoProps> = ({ todo }) => {
 
-    const deleteTodo = useDeleteTodo()
+    const deleteTodo = useDeleteTodo();
+    const completedTodo = useCompletedTodo();
+
+    const setSelectedTodoId = uiStore((store) => store.setSelectedTodoId);
+    const [completed, setCompleted] = useState(todo.completed)
+
+    useEffect(() => {
+        setCompleted(todo.completed);
+    }, [todo.completed])
 
     return (
         <li className="flex items-center justify-between bg-gray-50 p-3 rounded-lg shadow">
-            <span className="text-gray-700">{todo.title}</span>
             <div>
-                {/* <button
+                <input className='mr-3' type="checkbox" checked={completed} onChange={(e) => {
+                    const isChecked = e.target.checked;
+                    completedTodo.mutate({ id: todo.id, completed: isChecked }, {
+                        onSuccess: () => {
+                            setCompleted(isChecked);
+                        }
+                    });
+                }} />
+                <span className="text-gray-700">{todo.title}</span>
+            </div>
+            <div>
+                <button
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setSelectedTodoId(todo.id)
+                    }}
                     className="text-blue-500 hover:text-red-700 focus:outline-none">
-                    Изменить
-                </button> */}
+                    Редактировать
+                </button>
 
                 <button
                     onClick={(e) => {

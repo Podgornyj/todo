@@ -58,3 +58,51 @@ export const useDeleteTodo = () => {
     })
 
 }
+
+export const ChangeTodo = async (ChangedTodo: TodoType): Promise<TodoType> => {
+    const response = await fetch(`http://localhost:3001/todos/${ChangedTodo.id}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(ChangedTodo)
+    });
+    return response.json();
+}
+
+export const useChangeTodo = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: ChangeTodo,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['todos'] })
+        }
+    })
+
+}
+
+export const CompletedTodo = async (CompletedTodo: { id: number, completed: boolean }): Promise<TodoType> => {
+    const response = await fetch(`http://localhost:3001/todos/${CompletedTodo.id}`, {
+        method: 'PUT',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(CompletedTodo)
+    });
+    return response.json();
+}
+
+export const useCompletedTodo = () => {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: CompletedTodo,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['todos'] })
+        }
+    })
+
+}

@@ -1,5 +1,5 @@
-import CreateTodo from "./components/createTodo";
-import TodoList from "./components/todoList";
+import CreateTodo from "./components/CreateTodo";
+import TodoList from "./components/TodoList";
 
 
 function App() {
